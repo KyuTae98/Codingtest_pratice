@@ -1,64 +1,57 @@
 function solution(n, info) {
-    let max = 0;
-    let answer = [-1];
-    let lion = Array(11).fill(0);
-
-    function DFS(level,count){
-        // 종료조건
-        if(level == 10){
-            lion[level] = count;
-            // 점수비교
-            let sum = 0
-            for (let i = 0; i < 10; i++) {
-                if(lion[i] > info[i]){
-                    sum = sum + (10 - i);
-                }else if(lion[i] === info[i]){
-                    continue;
-                }else{
-                    sum = sum - (10 - i);
-                }      
-            }
-
-            if(sum > max){
-                max = sum;
-                answer = [...lion];
-            }else if(sum == max){
-                // 낮은 개수를 더 맞추는 경우를 답으로 채용함
-                for (let j = 10; j > 0; j--) {
-                    if(answer[j] == lion[j]){
-                        continue;
-                    }else if(lion[j] > answer[j]){
-                        answer = [...lion];
-                        break;
-                    }else{
-                        break;
-                    }
-                }
-            }
-        // 계속진행
-        }else{
-
-            // 남은 화살개수가 없거나 + 어피차보다 많이 못맞출경우
-            if(count == 0 || count < info[level] + 1 ){
-                DFS(level+1,count);
-            }else{
-                // 어피치보다 많이 맞출경우
-                lion[level] = info[level] + 1
-                count = count - (info[level] + 1);
-                DFS(level+1,count)
-
-
-                // 다른 점수로 돌릴경우
-                lion[level] = 0
-                count = count + (info[level] + 1);
-                DFS(level+1,count)
-            }
-
+    let answer = [];
+    let count = 0;
+    const countAnswer = (arr) =>{
+        let apeach = 0;
+        let ryon = 0
+        for(let i=0;i<11;i++){
+            if(arr[i]>info[i])
+                ryon +=10-i;
+            else if(info[i]!==0)
+                apeach +=10-i;
         }
-
-
+        if((ryon-apeach)>count){
+            count = (ryon-apeach);
+            answer = [...arr]
+        }
+        else if((ryon-apeach)===count){
+            for(let i=10;i>=0;i--){
+                if(arr[i]>answer[i]){
+                    answer = [...arr]
+                    break;
+                }
+                else if(arr[i]<answer[i])
+                    break
+            }
+        }
     }
-    DFS(0,n)
-
-    return answer;
+    const allCount = (index, counting, arr) => {
+        if(index===11){
+            let check = 0
+            if(counting>0){
+                arr[10] += counting;
+                check = 1;
+            }
+            countAnswer(arr)
+            if(check===1)
+                arr[10] -= counting
+        }
+        else{
+            if(counting>info[index]){
+                arr[index]+=info[index]+1
+                counting -= info[index]+1
+                allCount(index+1,counting,arr);
+                counting +=info[index]+1;
+                arr[index]-=info[index]+1
+            }
+            allCount(index+1,counting,arr);
+        }
+    }
+    let counting = n;
+    let arr = Array(11).fill().map(()=>0)
+    allCount(0,counting,arr);
+    return count===0?[-1]:answer;
 }
+//점수 차이가 같을 경우 가장 낮은 점수를 더 많이 맞힌 경우 return 
+//무조건 뒤로 넘기기
+//그냥 모든 경우를 고려해야한다 
