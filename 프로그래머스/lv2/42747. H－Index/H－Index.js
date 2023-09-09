@@ -1,11 +1,7 @@
 function solution(citations) {
     let answer = 0;
     let n = citations.length
-    citations.sort((a,b)=>{
-        if (b>a)
-            return 1
-        return -1
-    })
+    citations.sort((a,b)=>b-a)
     for(let i=0;i<citations.length;i++){
         let min = n - (i+1);//나머지 논문
         if(citations[i]>=i+1&&min<=i+1)
