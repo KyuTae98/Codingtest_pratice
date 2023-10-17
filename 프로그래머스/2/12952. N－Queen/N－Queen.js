@@ -1,9 +1,9 @@
 function solution(n) {
     let answer = 0;
-    let NQuene = new Array(n).fill();
+    let NQueen = new Array(n).fill();
     const checkNQuene = (index) =>{
         for(let i=0;i<index;i++)
-            if(NQuene[i]===NQuene[index]||Math.abs(NQuene[i]-NQuene[index])===Math.abs(i-index))
+            if(NQueen[i]===NQueen[index]||Math.abs(NQueen[i]-NQueen[index])===Math.abs(i-index))
                 return false
         return true
     }
@@ -12,7 +12,7 @@ function solution(n) {
             answer++;
         else
             for(let i=0;i<n;i++){
-                NQuene[index] = i;
+                NQueen[index] = i;
                 if(checkNQuene(index))
                     DFS(index+1)
             }
